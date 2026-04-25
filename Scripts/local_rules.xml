@@ -1,0 +1,56 @@
+<!--
+  local_rules.xml — Custom Wazuh Detection Rules
+  Lab: OakridgeBank AD Authentication Attack Lab
+  Deploy to: /var/ossec/etc/rules/local_rules.xml on BANK-SIEM01
+  Restart Wazuh after deploying: systemctl restart wazuh-manager
+-->
+
+<group name="oakridgebank,custom,">
+
+  <!-- Rule 100001: Brute Force Detection
+       Fires when 5+ failed logon events (4625) occur within 300 seconds
+       from the same source against the same account.
+       MITRE ATT&CK: T1110 - Brute Force
+       Active Response: firewall-drop on BANK-SIEM01 (iptables, 300s timeout)
+  -->
+  <rule id="100001" level="12" frequency="5" timeframe="300">
+    <if_matched_sid>60122</if_matched_sid>
+    <description>Brute force attack detected: 5+ failed logons in 300 seconds</description>
+    <mitre>
+      <id>T1110</id>
+    </mitre>
+    <group>authentication_failures,pci_dss_11.4,gdpr_IV_35.7.d,</group>
+  </rule>
+
+  <!-- Rule 100002: Privileged Group Membership Change
+       Fires when a user is added to a security-enabled global group (Event ID 4728).
+       Covers lateral movement and privilege escalation scenarios.
+       MITRE ATT&CK: T1078 - Valid Accounts
+  -->
+  <rule id="100002" level="14">
+    <if_sid>60159</if_sid>
+    <field name="win.system.eventID">^4728$</field>
+    <description>User added to a privileged security group (Event ID 4728)</description>
+    <mitre>
+      <id>T1078</id>
+    </mitre>
+    <group>account_changed,pci_dss_10.2.5,</group>
+  </rule>
+
+  <!-- Rule 100003: Kerberoasting Attempt
+       Fires on TGS requests (Event ID 4769) using RC4 encryption (0x17).
+       RC4 is legacy and its presence in a modern environment is a strong Kerberoasting indicator.
+       MITRE ATT&CK: T1558.003 - Steal or Forge Kerberos Tickets: Kerberoasting
+  -->
+  <rule id="100003" level="14">
+    <decoded_as>json</decoded_as>
+    <field name="win.system.eventID">^4769$</field>
+    <field name="win.eventdata.ticketEncryptionType">^0x17$</field>
+    <description>Kerberoasting attempt detected: TGS requested with RC4 encryption (0x17)</description>
+    <mitre>
+      <id>T1558.003</id>
+    </mitre>
+    <group>attack,pci_dss_11.4,</group>
+  </rule>
+
+</group>

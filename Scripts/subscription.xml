@@ -1,0 +1,77 @@
+<!--
+  subscription.xml — Windows Event Forwarding (WEF) Subscription
+  Lab: OakridgeBank AD Authentication Attack Lab
+
+  Collector: BANK-DC01 (192.168.100.10)
+  Forwarder:  BANK-WS01 (192.168.100.20)
+  Type: Source-initiated (forwarder pushes events to collector)
+  Auth: Kerberos (FQDN required — do NOT use IP in SubscriptionManager URL)
+
+  Deploy on BANK-DC01:
+    wecutil cs subscription.xml
+
+  Verify subscription is active:
+    wecutil gs WEF-Subscription
+
+  On BANK-WS01, set SubscriptionManager via registry (if GPO does not propagate):
+    HKLM\SOFTWARE\Policies\Microsoft\Windows\EventLog\EventForwarding\SubscriptionManager
+    Value: Server=http://BANK-DC01.oakridgebank.local:5985/wsman/SubscriptionManager/WEC,Refresh=60
+
+  Note: AllowedSourceDomainComputers SDDL includes Network Service SID (NS) to allow
+  the WEF service account to authenticate. Also run on DC01 after changes:
+    wevtutil sl Security /ca:"O:BAG:SYD:(A;;0xf0005;;;SY)(A;;0x5;;;BA)(A;;0x1;;;S-1-5-32-573)(A;;0x1;;;NS)"
+    Restart-Service EventLog -Force
+-->
+
+<Subscription xmlns="http://schemas.microsoft.com/2006/03/windows/events/subscription">
+
+  <SubscriptionId>WEF-Subscription</SubscriptionId>
+  <SubscriptionType>SourceInitiated</SubscriptionType>
+  <Description>OakridgeBank Lab — Forward Security, Sysmon, System, and Application events from domain workstations to DC01</Description>
+  <Enabled>true</Enabled>
+
+  <Uri>http://schemas.microsoft.com/wbem/wsman/1/windows/EventLog</Uri>
+
+  <ConfigurationMode>MinLatency</ConfigurationMode>
+
+  <Delivery Mode="Push">
+    <Batching>
+      <MaxItems>20</MaxItems>
+      <MaxLatencyTime>1000</MaxLatencyTime>
+    </Batching>
+    <PushSettings>
+      <Heartbeat Interval="40000"/>
+    </PushSettings>
+  </Delivery>
+
+  <Query>
+    <![CDATA[
+      <QueryList>
+        <Query Id="0">
+          <Select Path="Security">*</Select>
+        </Query>
+        <Query Id="1">
+          <Select Path="Microsoft-Windows-Sysmon/Operational">*</Select>
+        </Query>
+        <Query Id="2">
+          <Select Path="System">*</Select>
+        </Query>
+        <Query Id="3">
+          <Select Path="Application">*</Select>
+        </Query>
+      </QueryList>
+    ]]>
+  </Query>
+
+  <ReadExistingEvents>false</ReadExistingEvents>
+  <TransportName>http</TransportName>
+  <ContentFormat>RenderedText</ContentFormat>
+  <Locale Language="en-US"/>
+
+  <LogFile>ForwardedEvents</LogFile>
+
+  <!-- SDDL grants access to Domain Computers (DC) and Domain Controllers (DD).
+       NS (Network Service) SID added to fix WEF auth for source-initiated subscriptions. -->
+  <AllowedSourceDomainComputers>O:NSG:NSD:(A;;GA;;;DC)(A;;GA;;;DD)</AllowedSourceDomainComputers>
+
+</Subscription>
