@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Authentication Under Attack – What Is Authentication?</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="_shared.css"/>
+<script id="tailwind-config">
+tailwind.config = {
+  darkMode:"class",
+  theme:{ extend:{
+    colors:{
+      "background":"#10131a","surface":"#10131a","surface-container":"#1d2027",
+      "surface-container-low":"#191b23","surface-container-high":"#272a31",
+      "surface-container-highest":"#32353c","surface-container-lowest":"#0b0e15",
+      "surface-variant":"#32353c","on-background":"#e1e2ec","on-surface":"#e1e2ec",
+      "on-surface-variant":"#c2c6d6","primary":"#adc6ff","on-primary":"#002e6a",
+      "primary-container":"#4d8eff","on-primary-container":"#00285d",
+      "secondary":"#b9c8de","secondary-container":"#39485a",
+      "tertiary":"#ffb786","error":"#ffb4ab","error-container":"#93000a",
+      "outline":"#8c909f","outline-variant":"#424754","border-default":"#1e2a3a"
+    },
+    fontFamily:{"mono-code":["JetBrains Mono"],"mono-label":["JetBrains Mono"]},
+    fontSize:{
+      "h1":["24px",{lineHeight:"32px",letterSpacing:"-0.02em",fontWeight:"600"}],
+      "h2":["20px",{lineHeight:"28px",letterSpacing:"-0.01em",fontWeight:"600"}],
+      "body-md":["14px",{lineHeight:"20px"}],"body-sm":["12px",{lineHeight:"16px"}],
+      "mono-code":["13px",{lineHeight:"20px"}],"mono-label":["11px",{lineHeight:"14px",letterSpacing:"0.05em",fontWeight:"500"}]
+    },
+    spacing:{"stack-sm":"8px","stack-md":"16px","stack-lg":"32px","gutter":"16px","margin-page":"24px","card-padding":"16px"}
+  }}
+}
+</script>
+</head>
+<body class="bg-background text-on-background antialiased min-h-screen flex flex-col font-sans">
+
+<!-- NAV -->
+<nav class="fixed top-0 w-full z-50 bg-slate-950/90 backdrop-blur-md border-b border-slate-800">
+  <div class="flex justify-between items-center px-6 py-3 max-w-7xl mx-auto">
+    <a href="index.html" class="flex items-center gap-2 text-base font-bold tracking-tighter text-slate-50 uppercase">
+      <span class="material-symbols-outlined text-blue-500" style="font-variation-settings:'FILL' 1;">shield_lock</span>
+      Authentication Under Attack
+    </a>
+    <div class="hidden md:flex items-center gap-1 text-sm font-medium">
+      <a href="index.html"          class="text-slate-400 hover:text-slate-100 px-3 py-2 rounded transition-colors">Overview</a>
+      <a href="authentication.html" class="text-blue-400 border-b border-blue-400 px-3 py-2">Authentication</a>
+      <a href="attacking.html"      class="text-slate-400 hover:text-slate-100 px-3 py-2 rounded transition-colors">Attacking AD</a>
+      <a href="defending.html"      class="text-slate-400 hover:text-slate-100 px-3 py-2 rounded transition-colors">Defending AD</a>
+      <a href="timeline.html"       class="text-slate-400 hover:text-slate-100 px-3 py-2 rounded transition-colors">Attack Timeline</a>
+    </div>
+    <a href="timeline.html" class="hidden md:inline-flex items-center gap-1 bg-blue-600 hover:bg-blue-500 text-white text-sm font-semibold px-4 py-2 rounded transition-colors glow-blue">
+      <span class="material-symbols-outlined text-base">terminal</span> View Lab
+    </a>
+  </div>
+</nav>
+
+<main class="flex-grow pt-24 pb-16 px-4 max-w-7xl mx-auto w-full space-y-12">
+
+  <!-- Header -->
+  <header>
+    <div class="text-xs font-mono text-primary tracking-widest uppercase mb-2">Module 01</div>
+    <h1 class="text-4xl font-extrabold tracking-tighter text-on-background mb-3">What Is Authentication?</h1>
+    <p class="text-slate-400 max-w-3xl text-base">
+      Authentication is the process of verifying that an entity — a user, device, or service — is who it claims to be. In enterprise environments, Active Directory acts as the central identity authority for all authentication decisions.
+    </p>
+  </header>
+
+  <!-- Three Factors + Flow Diagram -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <!-- Left: Factors -->
+    <div class="bg-surface-container border border-border-default rounded-lg p-6 flex flex-col gap-4">
+      <h2 class="text-xl font-semibold text-on-surface">The Three Authentication Factors</h2>
+      <p class="text-sm text-slate-400">Robust authentication combines multiple factors. Relying on a single factor — especially passwords — is the primary root cause of compromise in real-world breaches.</p>
+      <div class="grid grid-cols-3 gap-3">
+        <div class="bg-surface-container-low border border-border-default rounded p-4 flex flex-col items-center text-center gap-2">
+          <span class="material-symbols-outlined text-primary text-3xl">password</span>
+          <span class="text-xs font-mono text-on-surface uppercase tracking-wide">Something<br/>You Know</span>
+          <span class="text-xs text-slate-500">Passwords, PINs</span>
+        </div>
+        <div class="bg-surface-container-low border border-border-default rounded p-4 flex flex-col items-center text-center gap-2">
+          <span class="material-symbols-outlined text-primary text-3xl">smartphone</span>
+          <span class="text-xs font-mono text-on-surface uppercase tracking-wide">Something<br/>You Have</span>
+          <span class="text-xs text-slate-500">Hardware token, phone</span>
+        </div>
+        <div class="bg-surface-container-low border border-border-default rounded p-4 flex flex-col items-center text-center gap-2">
+          <span class="material-symbols-outlined text-primary text-3xl">fingerprint</span>
+          <span class="text-xs font-mono text-on-surface uppercase tracking-wide">Something<br/>You Are</span>
+          <span class="text-xs text-slate-500">Biometrics</span>
+        </div>
+      </div>
+      <div class="mt-2 p-3 bg-surface-container-low border-l-2 border-error rounded text-xs text-slate-400">
+        <span class="text-error font-mono">RISK:</span> Most AD environments rely solely on passwords (Factor 1). The attacks in this lab exploit exactly that weakness.
+      </div>
+    </div>
+
+    <!-- Right: Auth Flow -->
+    <div class="bg-surface-container border border-border-default rounded-lg p-6 flex flex-col gap-4 justify-between">
+      <h2 class="text-xl font-semibold text-on-surface">The Authentication Flow</h2>
+      <div class="flex items-center justify-between py-6">
+        <div class="flex flex-col items-center gap-2">
+          <div class="w-14 h-14 rounded-full bg-surface-variant border border-outline-variant flex items-center justify-center">
+            <span class="material-symbols-outlined text-on-surface">person</span>
+          </div>
+          <span class="text-xs font-mono text-slate-400 uppercase">USER</span>
+        </div>
+        <div class="flex-1 h-[2px] mx-3 relative">
+          <div class="absolute inset-0 bg-outline-variant"></div>
+          <div class="absolute inset-0 flow-line"></div>
+          <div class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 w-0 h-0 border-t-[4px] border-t-transparent border-l-[6px] border-l-primary border-b-[4px] border-b-transparent"></div>
+        </div>
+        <div class="flex flex-col items-center gap-2">
+          <div class="w-16 h-16 rounded-lg bg-primary-container border border-primary flex items-center justify-center glow-blue">
+            <span class="material-symbols-outlined text-on-primary-container">dns</span>
+          </div>
+          <span class="text-xs font-mono text-primary uppercase">Auth Server</span>
+        </div>
+        <div class="flex-1 h-[2px] mx-3 relative">
+          <div class="absolute inset-0 bg-outline-variant"></div>
+          <div class="absolute inset-0 flow-line"></div>
+          <div class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 w-0 h-0 border-t-[4px] border-t-transparent border-l-[6px] border-l-primary border-b-[4px] border-b-transparent"></div>
+        </div>
+        <div class="flex flex-col items-center gap-2">
+          <div class="w-14 h-14 rounded-full bg-surface-variant border border-outline-variant flex items-center justify-center">
+            <span class="material-symbols-outlined text-on-surface">folder_shared</span>
+          </div>
+          <span class="text-xs font-mono text-slate-400 uppercase">Resource</span>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-2 text-xs">
+        <div class="bg-surface-container-low p-3 rounded border border-border-default">
+          <span class="text-primary font-mono">Step 1 —</span>
+          <span class="text-slate-400"> User presents credentials to the authentication server (KDC)</span>
+        </div>
+        <div class="bg-surface-container-low p-3 rounded border border-border-default">
+          <span class="text-primary font-mono">Step 2 —</span>
+          <span class="text-slate-400"> Server validates and issues a token or ticket granting access</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Key Protocols -->
+  <div>
+    <h2 class="text-xl font-semibold text-on-surface mb-4">Key Protocols in Active Directory</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+      <div class="bg-surface-container-low border border-border-default rounded p-4 flex items-start gap-3 hover:bg-surface-container transition-colors">
+        <span class="material-symbols-outlined text-primary mt-0.5">key</span>
+        <div>
+          <div class="font-mono text-xs text-on-surface uppercase tracking-wide mb-1">Kerberos</div>
+          <div class="text-xs text-slate-400">Ticket-based. Default for AD since Windows 2000. Uses the KDC (Key Distribution Center) on the Domain Controller.</div>
+        </div>
+      </div>
+      <div class="bg-surface-container-low border border-border-default rounded p-4 flex items-start gap-3 hover:bg-surface-container transition-colors">
+        <span class="material-symbols-outlined text-secondary mt-0.5">vpn_key</span>
+        <div>
+          <div class="font-mono text-xs text-on-surface uppercase tracking-wide mb-1">NTLM</div>
+          <div class="text-xs text-slate-400">Challenge-response fallback. Used when Kerberos is unavailable. Older and weaker — still widely supported, which is the problem.</div>
+        </div>
+      </div>
+      <div class="bg-surface-container-low border border-border-default rounded p-4 flex items-start gap-3 hover:bg-surface-container transition-colors">
+        <span class="material-symbols-outlined text-tertiary mt-0.5">account_tree</span>
+        <div>
+          <div class="font-mono text-xs text-on-surface uppercase tracking-wide mb-1">LDAP</div>
+          <div class="text-xs text-slate-400">Lightweight Directory Access Protocol. Used to query and modify AD directory data — user accounts, groups, policies.</div>
+        </div>
+      </div>
+      <div class="bg-surface-container-low border border-border-default rounded p-4 flex items-start gap-3 hover:bg-surface-container transition-colors">
+        <span class="material-symbols-outlined text-primary mt-0.5">api</span>
+        <div>
+          <div class="font-mono text-xs text-on-surface uppercase tracking-wide mb-1">OAuth 2.0</div>
+          <div class="text-xs text-slate-400">Token-based delegation for cloud and web services. Used in hybrid environments alongside traditional AD auth.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Kerberos Step Diagram -->
+  <div>
+    <h2 class="text-xl font-semibold text-on-surface mb-2">How Kerberos Works — Step by Step</h2>
+    <p class="text-sm text-slate-400 mb-5">Kerberos uses a trusted third party (the KDC on the Domain Controller) to issue time-limited encrypted tickets. No password is ever sent over the network.</p>
+    <div class="bg-surface-container border border-border-default rounded-lg p-6 overflow-x-auto">
+      <div class="flex items-start gap-2 min-w-[700px]">
+
+        <div class="flex flex-col items-center gap-1 flex-1">
+          <div class="w-12 h-12 rounded-full bg-surface-container-high border-2 border-primary flex items-center justify-center text-primary font-bold glow-blue">1</div>
+          <div class="text-xs font-mono text-center text-on-surface mt-1">Client sends<br/>AS-REQ</div>
+          <div class="text-xs text-center text-slate-500">Authentication<br/>Request</div>
+        </div>
+        <div class="flex-1 flex items-center mt-6"><div class="w-full h-[2px] relative"><div class="absolute inset-0 bg-border-default"></div><div class="absolute inset-0 flow-line"></div></div></div>
+
+        <div class="flex flex-col items-center gap-1 flex-1">
+          <div class="w-12 h-12 rounded-full bg-surface-container-high border-2 border-primary flex items-center justify-center text-primary font-bold glow-blue">2</div>
+          <div class="text-xs font-mono text-center text-on-surface mt-1">KDC issues<br/>TGT</div>
+          <div class="text-xs text-center text-slate-500">Ticket Granting<br/>Ticket</div>
+        </div>
+        <div class="flex-1 flex items-center mt-6"><div class="w-full h-[2px] relative"><div class="absolute inset-0 bg-border-default"></div><div class="absolute inset-0 flow-line"></div></div></div>
+
+        <div class="flex flex-col items-center gap-1 flex-1">
+          <div class="w-12 h-12 rounded-full bg-surface-container-high border-2 border-primary flex items-center justify-center text-primary font-bold glow-blue">3</div>
+          <div class="text-xs font-mono text-center text-on-surface mt-1">Client sends<br/>TGS-REQ</div>
+          <div class="text-xs text-center text-slate-500">Service Ticket<br/>Request</div>
+        </div>
+        <div class="flex-1 flex items-center mt-6"><div class="w-full h-[2px] relative"><div class="absolute inset-0 bg-border-default"></div><div class="absolute inset-0 flow-line"></div></div></div>
+
+        <div class="flex flex-col items-center gap-1 flex-1">
+          <div class="w-12 h-12 rounded-full bg-surface-container-high border-2 border-primary flex items-center justify-center text-primary font-bold glow-blue">4</div>
+          <div class="text-xs font-mono text-center text-on-surface mt-1">KDC issues<br/>Service Ticket</div>
+          <div class="text-xs text-center text-slate-500">Encrypted with<br/>service key</div>
+        </div>
+        <div class="flex-1 flex items-center mt-6"><div class="w-full h-[2px] relative"><div class="absolute inset-0 bg-border-default"></div><div class="absolute inset-0 flow-line"></div></div></div>
+
+        <div class="flex flex-col items-center gap-1 flex-1">
+          <div class="w-12 h-12 rounded-full bg-surface-container-high border-2 border-success flex items-center justify-center font-bold" style="color:#10b981">5</div>
+          <div class="text-xs font-mono text-center text-on-surface mt-1">Client presents<br/>ticket to service</div>
+          <div class="text-xs text-center text-slate-500">Access<br/>Granted</div>
+        </div>
+      </div>
+    </div>
+    <div class="mt-3 p-3 bg-surface-container-low border-l-2 border-error rounded text-xs text-slate-400">
+      <span class="text-error font-mono">ATTACK SURFACE:</span> Step 4 is where Kerberoasting strikes — an attacker with any domain user account can request service tickets and crack them offline. See the <a href="attacking.html" class="text-primary underline">Attacking AD</a> section.
+    </div>
+  </div>
+
+  <!-- NTLM vs Kerberos -->
+  <div>
+    <h2 class="text-xl font-semibold text-on-surface mb-4">NTLM vs Kerberos</h2>
+    <div class="bg-surface-container border border-border-default rounded-lg overflow-hidden">
+      <div class="grid grid-cols-3 bg-surface-container-high border-b border-border-default">
+        <div class="p-3 text-xs font-mono text-slate-500 uppercase">Feature</div>
+        <div class="p-3 text-xs font-mono text-slate-500 uppercase">NTLM</div>
+        <div class="p-3 text-xs font-mono text-slate-500 uppercase">Kerberos</div>
+      </div>
+      <div class="grid grid-cols-3 border-b border-border-default hover:bg-border-default transition-colors">
+        <div class="p-3 text-sm text-on-surface">Mechanism</div>
+        <div class="p-3 text-sm text-slate-400">Challenge / Response</div>
+        <div class="p-3 text-sm text-slate-400">Ticket-based (TGT → TGS)</div>
+      </div>
+      <div class="grid grid-cols-3 border-b border-border-default hover:bg-border-default transition-colors">
+        <div class="p-3 text-sm text-on-surface">Mutual Authentication</div>
+        <div class="p-3 text-sm text-error">No</div>
+        <div class="p-3 text-sm text-green-400">Yes</div>
+      </div>
+      <div class="grid grid-cols-3 border-b border-border-default hover:bg-border-default transition-colors">
+        <div class="p-3 text-sm text-on-surface">Speed</div>
+        <div class="p-3 text-sm text-slate-400">Slower (multiple round trips)</div>
+        <div class="p-3 text-sm text-slate-400">Faster (cached tickets)</div>
+      </div>
+      <div class="grid grid-cols-3 hover:bg-border-default transition-colors">
+        <div class="p-3 text-sm text-on-surface">Key Vulnerability</div>
+        <div class="p-3 text-sm text-error">Pass-the-Hash, relay attacks</div>
+        <div class="p-3 text-sm text-yellow-400">Kerberoasting, AS-REP Roasting</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Next -->
+  <div class="flex justify-end">
+    <a href="attacking.html" class="flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white font-semibold px-6 py-3 rounded transition-colors glow-blue">
+      Next: How Attackers Exploit This
+      <span class="material-symbols-outlined">arrow_forward</span>
+    </a>
+  </div>
+
+</main>
+
+<footer class="w-full py-6 border-t border-slate-800 bg-slate-950">
+  <div class="flex flex-col md:flex-row justify-between items-center px-8 gap-3 max-w-7xl mx-auto">
+    <div class="text-sm text-slate-400">Liam Jones · University of Arkansas · Cyber Crime &amp; Data Privacy Law — Prof. Reavis</div>
+    <div class="text-xs text-slate-600 font-mono">oakridgebank.local · Isolated Lab · Educational Use Only</div>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Authentication Under Attack – Attacking AD</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="_shared.css"/>
+<script id="tailwind-config">
+tailwind.config={darkMode:"class",theme:{extend:{
+  colors:{"background":"#10131a","surface":"#10131a","surface-container":"#1d2027","surface-container-low":"#191b23","surface-container-high":"#272a31","surface-container-lowest":"#0b0e15","surface-variant":"#32353c","on-background":"#e1e2ec","on-surface":"#e1e2ec","on-surface-variant":"#c2c6d6","primary":"#adc6ff","on-primary":"#002e6a","primary-container":"#4d8eff","on-primary-container":"#00285d","secondary":"#b9c8de","secondary-container":"#39485a","tertiary":"#ffb786","error":"#ffb4ab","error-container":"#93000a","outline":"#8c909f","outline-variant":"#424754","border-default":"#1e2a3a"},
+  fontFamily:{"mono-code":["JetBrains Mono"],"mono-label":["JetBrains Mono"]},
+  fontSize:{"h1":["24px",{lineHeight:"32px",letterSpacing:"-0.02em",fontWeight:"600"}],"h2":["20px",{lineHeight:"28px",letterSpacing:"-0.01em",fontWeight:"600"}],"body-md":["14px",{lineHeight:"20px"}],"body-sm":["12px",{lineHeight:"16px"}],"mono-code":["13px",{lineHeight:"20px"}],"mono-label":["11px",{lineHeight:"14px",letterSpacing:"0.05em",fontWeight:"500"}]},
+  spacing:{"stack-sm":"8px","stack-md":"16px","stack-lg":"32px","gutter":"16px","margin-page":"24px","card-padding":"16px"}
+}}}
+</script>
+</head>
+<body class="bg-background text-on-background antialiased min-h-screen flex flex-col font-sans">
+
+<!-- NAV -->
+<nav class="fixed top-0 w-full z-50 bg-slate-950/90 backdrop-blur-md border-b border-slate-800">
+  <div class="flex justify-between items-center px-6 py-3 max-w-7xl mx-auto">
+    <a href="index.html" class="flex items-center gap-2 text-base font-bold tracking-tighter text-slate-50 uppercase">
+      <span class="material-symbols-outlined text-blue-500" style="font-variation-settings:'FILL' 1;">shield_lock</span>
+      Authentication Under Attack
+    </a>
+    <div class="hidden md:flex items-center gap-1 text-sm font-medium">
+      <a href="index.html"          class="text-slate-400 hover:text-slate-100 px-3 py-2 rounded transition-colors">Overview</a>
+      <a href="authentication.html" class="text-slate-400 hover:text-slate-100 px-3 py-2 rounded transition-colors">Authentication</a>
+      <a href="attacking.html"      class="text-red-400 border-b border-red-400 px-3 py-2">Attacking AD</a>
+      <a href="defending.html"      class="text-slate-400 hover:text-slate-100 px-3 py-2 rounded transition-colors">Defending AD</a>
+      <a href="timeline.html"       class="text-slate-400 hover:text-slate-100 px-3 py-2 rounded transition-colors">Attack Timeline</a>
+    </div>
+    <a href="timeline.html" class="hidden md:inline-flex items-center gap-1 bg-blue-600 hover:bg-blue-500 text-white text-sm font-semibold px-4 py-2 rounded transition-colors glow-blue">
+      <span class="material-symbols-outlined text-base">terminal</span> View Lab
+    </a>
+  </div>
+</nav>
+
+<main class="flex-grow pt-24 pb-16 px-4 max-w-7xl mx-auto w-full space-y-12">
+
+  <header>
+    <div class="text-xs font-mono text-red-400 tracking-widest uppercase mb-2">Module 02</div>
+    <h1 class="text-4xl font-extrabold tracking-tighter text-on-background mb-3">How Attackers Exploit Authentication</h1>
+    <p class="text-slate-400 max-w-3xl text-base">
+      Active Directory is the central nervous system of most enterprise environments. Its authentication mechanisms — specifically Kerberos and NTLM — contain design-level weaknesses that adversaries have refined into reliable, repeatable attack techniques.
+    </p>
+  </header>
+
+  <!-- Threat Cards 2x2 -->
+  <section>
+    <h2 class="text-xl font-semibold text-on-surface mb-4">Primary Attack Techniques</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+      <!-- Brute Force -->
+      <div class="bg-surface-container border border-border-default border-t-2 border-t-error rounded-lg p-5 flex flex-col gap-3 glow-red">
+        <div class="flex justify-between items-start">
+          <div class="flex items-center gap-3">
+            <span class="material-symbols-outlined text-error text-3xl">password</span>
+            <h3 class="text-lg font-semibold text-on-surface">Password Spraying &amp; Brute Force</h3>
+          </div>
+          <span class="text-xs font-mono px-2 py-1 rounded border border-error/50 bg-error/10 text-error">T1110</span>
+        </div>
+        <p class="text-sm text-slate-400 flex-grow">
+          Attackers attempt many password guesses — either against one account (brute force) or one password against many accounts (spraying). Spraying avoids lockouts by staying below the threshold per account, making it ideal for targeting AD at scale.
+        </p>
+        <div class="text-xs font-mono text-slate-500 bg-surface-container-low p-3 rounded border border-border-default">
+          <span class="text-error">Event IDs to watch:</span> 4625 (failed logon) · 4740 (account lockout) · 4771 (Kerberos pre-auth failure)
+        </div>
+        <div class="h-1 w-full bg-error/60 rounded-full mt-auto"></div>
+      </div>
+
+      <!-- Kerberoasting -->
+      <div class="bg-surface-container border border-border-default border-t-2 border-t-error rounded-lg p-5 flex flex-col gap-3 glow-red">
+        <div class="flex justify-between items-start">
+          <div class="flex items-center gap-3">
+            <span class="material-symbols-outlined text-error text-3xl">vpn_key</span>
+            <h3 class="text-lg font-semibold text-on-surface">Kerberoasting</h3>
+          </div>
+          <span class="text-xs font-mono px-2 py-1 rounded border border-error/50 bg-error/10 text-error">T1558.003</span>
+        </div>
+        <p class="text-sm text-slate-400 flex-grow">
+          Any domain user can request a service ticket (TGS) for any account with a Service Principal Name (SPN). The ticket is encrypted with the service account's password hash. Attackers export it and crack it offline — no noise on the network.
+        </p>
+        <div class="text-xs font-mono text-slate-500 bg-surface-container-low p-3 rounded border border-border-default">
+          <span class="text-error">Event IDs to watch:</span> 4769 (Kerberos service ticket request with RC4 encryption type 0x17)
+        </div>
+        <div class="h-1 w-full bg-error/60 rounded-full mt-auto"></div>
+      </div>
+
+      <!-- Pass-the-Hash -->
+      <div class="bg-surface-container border border-border-default border-t-2 border-t-error rounded-lg p-5 flex flex-col gap-3 glow-red">
+        <div class="flex justify-between items-start">
+          <div class="flex items-center gap-3">
+            <span class="material-symbols-outlined text-error text-3xl">fingerprint</span>
+            <h3 class="text-lg font-semibold text-on-surface">Pass-the-Hash (PtH)</h3>
+          </div>
+          <span class="text-xs font-mono px-2 py-1 rounded border border-error/50 bg-error/10 text-error">T1550.002</span>
+        </div>
+        <p class="text-sm text-slate-400 flex-grow">
+          NTLM uses a password hash — not the plaintext — for authentication. Attackers dump hashes from memory on a compromised host (e.g., via Mimikatz) and use them directly to authenticate to other systems, enabling lateral movement without cracking anything.
+        </p>
+        <div class="text-xs font-mono text-slate-500 bg-surface-container-low p-3 rounded border border-border-default">
+          <span class="text-error">Event IDs to watch:</span> 4624 Logon Type 9 (NewCredentials) — explicit credential use over NTLM
+        </div>
+        <div class="h-1 w-full bg-error/60 rounded-full mt-auto"></div>
+      </div>
+
+      <!-- AS-REP Roasting -->
+      <div class="bg-surface-container border border-border-default border-t-2 border-t-error rounded-lg p-5 flex flex-col gap-3 glow-red">
+        <div class="flex justify-between items-start">
+          <div class="flex items-center gap-3">
+            <span class="material-symbols-outlined text-error text-3xl">hub</span>
+            <h3 class="text-lg font-semibold text-on-surface">AS-REP Roasting</h3>
+          </div>
+          <span class="text-xs font-mono px-2 py-1 rounded border border-error/50 bg-error/10 text-error">T1558.004</span>
+        </div>
+        <p class="text-sm text-slate-400 flex-grow">
+          Accounts configured with "Do not require Kerberos preauthentication" will respond to authentication requests without verifying identity first. Attackers can request an AS-REP response for these accounts and crack the encrypted portion offline.
+        </p>
+        <div class="text-xs font-mono text-slate-500 bg-surface-container-low p-3 rounded border border-border-default">
+          <span class="text-error">Event IDs to watch:</span> 4768 with preauth type 0 — AS-REQ without preauthentication
+        </div>
+        <div class="h-1 w-full bg-error/60 rounded-full mt-auto"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Real-World Incidents -->
+  <section>
+    <h2 class="text-xl font-semibold text-on-surface mb-1">Real-World Incidents (2023–2025)</h2>
+    <p class="text-sm text-slate-500 mb-4">These are not theoretical. Every technique above was used in a real breach.</p>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div class="bg-surface-container-low border border-border-default rounded-lg p-5">
+        <div class="text-xs font-mono text-error uppercase mb-1 tracking-widest">APT29 · 2024</div>
+        <h3 class="font-semibold text-on-surface mb-2">Midnight Blizzard</h3>
+        <p class="text-xs text-slate-400">Russian state actor used <span class="text-error">password spraying</span> against legacy test accounts that lacked MFA to breach Microsoft corporate email systems. The accounts had never been secured because they were "non-production."</p>
+        <div class="mt-3 text-xs font-mono text-slate-600">Technique: T1110.003</div>
+      </div>
+      <div class="bg-surface-container-low border border-border-default rounded-lg p-5">
+        <div class="text-xs font-mono text-error uppercase mb-1 tracking-widest">UNC3944 · 2024</div>
+        <h3 class="font-semibold text-on-surface mb-2">Change Healthcare</h3>
+        <p class="text-xs text-slate-400">Attackers used <span class="text-error">stolen credentials</span> acquired via info-stealer malware to authenticate to a Citrix remote access portal. No MFA was configured. Led to widespread ransomware deployment across healthcare systems.</p>
+        <div class="mt-3 text-xs font-mono text-slate-600">Technique: T1078</div>
+      </div>
+      <div class="bg-surface-container-low border border-border-default rounded-lg p-5">
+        <div class="text-xs font-mono text-error uppercase mb-1 tracking-widest">ALPHV/BlackCat · 2023–24</div>
+        <h3 class="font-semibold text-on-surface mb-2">MGM Resorts / Caesars</h3>
+        <p class="text-xs text-slate-400">Used <span class="text-error">social engineering and MFA fatigue</span> to bypass authentication, then leveraged <span class="text-error">Pass-the-Hash</span> for lateral movement through the AD environment. Demonstrated that even MFA can be bypassed at the human layer.</p>
+        <div class="mt-3 text-xs font-mono text-slate-600">Technique: T1550.002</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Attack Chain -->
+  <section>
+    <h2 class="text-xl font-semibold text-on-surface mb-4">Typical AD Attack Chain</h2>
+    <div class="bg-surface-container border border-border-default rounded-lg p-6 overflow-x-auto">
+      <div class="flex items-center min-w-[800px] justify-between">
+        <div class="flex flex-col items-center gap-2 flex-1">
+          <div class="w-12 h-12 rounded-full bg-surface-variant border border-outline flex items-center justify-center">
+            <span class="material-symbols-outlined text-secondary">search</span>
+          </div>
+          <span class="text-xs font-mono text-center text-on-surface">Reconnaissance</span>
+          <span class="text-xs text-center text-slate-500">nmap, BloodHound</span>
+        </div>
+        <div class="text-slate-600 flex-shrink-0"><span class="material-symbols-outlined">arrow_forward</span></div>
+        <div class="flex flex-col items-center gap-2 flex-1">
+          <div class="w-12 h-12 rounded-full bg-error-container border border-error flex items-center justify-center glow-red">
+            <span class="material-symbols-outlined text-error">key</span>
+          </div>
+          <span class="text-xs font-mono text-center text-error">Credential Attack</span>
+          <span class="text-xs text-center text-slate-500">Brute force / Kerbrute</span>
+        </div>
+        <div class="text-slate-600 flex-shrink-0"><span class="material-symbols-outlined">arrow_forward</span></div>
+        <div class="flex flex-col items-center gap-2 flex-1">
+          <div class="w-12 h-12 rounded-full bg-surface-variant border border-outline flex items-center justify-center">
+            <span class="material-symbols-outlined text-secondary">share</span>
+          </div>
+          <span class="text-xs font-mono text-center text-on-surface">Lateral Movement</span>
+          <span class="text-xs text-center text-slate-500">Pass-the-Hash</span>
+        </div>
+        <div class="text-slate-600 flex-shrink-0"><span class="material-symbols-outlined">arrow_forward</span></div>
+        <div class="flex flex-col items-center gap-2 flex-1">
+          <div class="w-12 h-12 rounded-full bg-surface-variant border border-outline flex items-center justify-center">
+            <span class="material-symbols-outlined text-secondary">admin_panel_settings</span>
+          </div>
+          <span class="text-xs font-mono text-center text-on-surface">Privilege Escalation</span>
+          <span class="text-xs text-center text-slate-500">Kerberoasting → DA</span>
+        </div>
+        <div class="text-slate-600 flex-shrink-0"><span class="material-symbols-outlined">arrow_forward</span></div>
+        <div class="flex flex-col items-center gap-2 flex-1">
+          <div class="w-12 h-12 rounded-full bg-surface-variant border border-outline flex items-center justify-center">
+            <span class="material-symbols-outlined text-secondary">cloud_download</span>
+          </div>
+          <span class="text-xs font-mono text-center text-on-surface">Exfiltration</span>
+          <span class="text-xs text-center text-slate-500">Data theft / Ransomware</span>
+        </div>
+      </div>
+    </div>
+    <div class="mt-3 text-xs text-slate-500 font-mono text-right">
+      Full live demonstration → <a href="timeline.html" class="text-primary underline">Attack Timeline</a>
+    </div>
+  </section>
+
+  <!-- Nav -->
+  <div class="flex justify-between">
+    <a href="authentication.html" class="flex items-center gap-2 border border-slate-700 hover:border-blue-500 text-slate-300 hover:text-white font-semibold px-5 py-3 rounded transition-all">
+      <span class="material-symbols-outlined">arrow_back</span> Authentication Fundamentals
+    </a>
+    <a href="defending.html" class="flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white font-semibold px-5 py-3 rounded transition-colors glow-blue">
+      Next: Defensive Controls <span class="material-symbols-outlined">arrow_forward</span>
+    </a>
+  </div>
+
+</main>
+
+<footer class="w-full py-6 border-t border-slate-800 bg-slate-950">
+  <div class="flex flex-col md:flex-row justify-between items-center px-8 gap-3 max-w-7xl mx-auto">
+    <div class="text-sm text-slate-400">Liam Jones · University of Arkansas · Cyber Crime &amp; Data Privacy Law — Prof. Reavis</div>
+    <div class="text-xs text-slate-600 font-mono">oakridgebank.local · Isolated Lab · Educational Use Only</div>
+  </div>
+</footer>
+
+</body>
+</html>

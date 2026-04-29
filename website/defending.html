@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Authentication Under Attack – Defending AD</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="_shared.css"/>
+<script id="tailwind-config">
+tailwind.config={darkMode:"class",theme:{extend:{
+  colors:{"background":"#10131a","surface":"#10131a","surface-container":"#1d2027","surface-container-low":"#191b23","surface-container-high":"#272a31","surface-container-lowest":"#0b0e15","surface-variant":"#32353c","on-background":"#e1e2ec","on-surface":"#e1e2ec","on-surface-variant":"#c2c6d6","primary":"#adc6ff","on-primary":"#002e6a","primary-container":"#4d8eff","on-primary-container":"#00285d","secondary":"#b9c8de","tertiary":"#ffb786","error":"#ffb4ab","error-container":"#93000a","outline":"#8c909f","outline-variant":"#424754","success":"#10b981","success-container":"#064e3b","border-default":"#1e2a3a"},
+  fontFamily:{"mono-code":["JetBrains Mono"],"mono-label":["JetBrains Mono"]},
+  fontSize:{"h1":["24px",{lineHeight:"32px",letterSpacing:"-0.02em",fontWeight:"600"}],"h2":["20px",{lineHeight:"28px",letterSpacing:"-0.01em",fontWeight:"600"}],"body-md":["14px",{lineHeight:"20px"}],"body-sm":["12px",{lineHeight:"16px"}],"mono-code":["13px",{lineHeight:"20px"}],"mono-label":["11px",{lineHeight:"14px",letterSpacing:"0.05em",fontWeight:"500"}]},
+  spacing:{"stack-sm":"8px","stack-md":"16px","stack-lg":"32px","gutter":"16px","margin-page":"24px","card-padding":"16px"}
+}}}
+</script>
+</head>
+<body class="bg-background text-on-background antialiased min-h-screen flex flex-col font-sans">
+
+<!-- NAV -->
+<nav class="fixed top-0 w-full z-50 bg-slate-950/90 backdrop-blur-md border-b border-slate-800">
+  <div class="flex justify-between items-center px-6 py-3 max-w-7xl mx-auto">
+    <a href="index.html" class="flex items-center gap-2 text-base font-bold tracking-tighter text-slate-50 uppercase">
+      <span class="material-symbols-outlined text-blue-500" style="font-variation-settings:'FILL' 1;">shield_lock</span>
+      Authentication Under Attack
+    </a>
+    <div class="hidden md:flex items-center gap-1 text-sm font-medium">
+      <a href="index.html"          class="text-slate-400 hover:text-slate-100 px-3 py-2 rounded transition-colors">Overview</a>
+      <a href="authentication.html" class="text-slate-400 hover:text-slate-100 px-3 py-2 rounded transition-colors">Authentication</a>
+      <a href="attacking.html"      class="text-slate-400 hover:text-slate-100 px-3 py-2 rounded transition-colors">Attacking AD</a>
+      <a href="defending.html"      class="text-green-400 border-b border-green-400 px-3 py-2">Defending AD</a>
+      <a href="timeline.html"       class="text-slate-400 hover:text-slate-100 px-3 py-2 rounded transition-colors">Attack Timeline</a>
+    </div>
+    <a href="timeline.html" class="hidden md:inline-flex items-center gap-1 bg-blue-600 hover:bg-blue-500 text-white text-sm font-semibold px-4 py-2 rounded transition-colors glow-blue">
+      <span class="material-symbols-outlined text-base">terminal</span> View Lab
+    </a>
+  </div>
+</nav>
+
+<main class="flex-grow pt-24 pb-16 px-4 max-w-7xl mx-auto w-full space-y-12">
+
+  <header>
+    <div class="text-xs font-mono text-green-400 tracking-widest uppercase mb-2">Module 03</div>
+    <h1 class="text-4xl font-extrabold tracking-tighter text-on-background mb-3">Defense in Depth</h1>
+    <p class="text-slate-400 max-w-3xl text-base">
+      No single control stops every attack. Effective AD security layers multiple defenses: enforce logging, limit blast radius with account lockout, centralize logs via WEF, and correlate with a SIEM. All four were deployed and validated in this lab.
+    </p>
+  </header>
+
+  <!-- 4 Pillars -->
+  <section>
+    <h2 class="text-xl font-semibold text-on-surface mb-4">The Four Pillars Deployed in This Lab</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+
+      <!-- Pillar 1: Audit Policy -->
+      <div class="bg-surface-container-low border border-border-default border-t-2 border-t-success rounded-lg p-5 flex flex-col gap-3 glow-green">
+        <div class="flex items-center justify-between">
+          <h3 class="font-semibold text-on-surface">Audit Policy</h3>
+          <span class="flex items-center gap-1 text-xs font-mono bg-success/10 border border-success/40 text-success px-2 py-0.5 rounded">
+            <span class="material-symbols-outlined text-xs">check_circle</span> ENFORCED
+          </span>
+        </div>
+        <p class="text-xs text-slate-400 flex-grow">Advanced audit policies ensure authentication events are captured. Without logging, attacks are invisible.</p>
+        <div class="bg-[#05070a] border border-border-default rounded p-3 overflow-x-auto">
+<pre class="text-xs font-mono text-secondary leading-relaxed">auditpol /set /subcategory:<span class="text-primary">"Logon"</span> \
+  /success:enable /failure:enable
+
+auditpol /set /subcategory:<span class="text-primary">"Kerberos Authentication Service"</span> \
+  /success:enable /failure:enable
+
+auditpol /set /subcategory:<span class="text-primary">"Credential Validation"</span> \
+  /success:enable /failure:enable</pre>
+        </div>
+        <div class="text-xs font-mono text-slate-500">Screenshot: <a href="../Screenshots/screenshot_06_auditpol.png" target="_blank" class="text-primary underline">auditpol output</a></div>
+      </div>
+
+      <!-- Pillar 2: Account Lockout -->
+      <div class="bg-surface-container-low border border-border-default border-t-2 border-t-success rounded-lg p-5 flex flex-col gap-3 glow-green">
+        <div class="flex items-center justify-between">
+          <h3 class="font-semibold text-on-surface">Account Lockout</h3>
+          <span class="flex items-center gap-1 text-xs font-mono bg-success/10 border border-success/40 text-success px-2 py-0.5 rounded">
+            <span class="material-symbols-outlined text-xs">check_circle</span> ACTIVE
+          </span>
+        </div>
+        <p class="text-xs text-slate-400 flex-grow">Locks accounts after 5 failed attempts for 15 minutes. Stops brute force — any attack triggering this fires Event ID 4740.</p>
+        <div class="bg-[#05070a] border border-border-default rounded p-3 overflow-x-auto">
+<pre class="text-xs font-mono text-secondary leading-relaxed">Set-ADDefaultDomainPasswordPolicy `
+  -Identity <span class="text-primary">"oakridgebank.local"</span> `
+  -LockoutThreshold <span class="text-tertiary">5</span> `
+  -LockoutObservationWindow <span class="text-tertiary">00:30:00</span> `
+  -LockoutDuration <span class="text-tertiary">00:15:00</span> `
+  -MinPasswordLength <span class="text-tertiary">12</span> `
+  -ComplexityEnabled <span class="text-green-400">$true</span></pre>
+        </div>
+        <div class="text-xs font-mono text-slate-500">Screenshot: <a href="../Screenshots/screenshot_03_4625_detail.png" target="_blank" class="text-primary underline">lockout policy — threshold=5</a></div>
+      </div>
+
+      <!-- Pillar 3: WEF -->
+      <div class="bg-surface-container-low border border-border-default border-t-2 border-t-success rounded-lg p-5 flex flex-col gap-3 glow-green">
+        <div class="flex items-center justify-between">
+          <h3 class="font-semibold text-on-surface">Windows Event Forwarding</h3>
+          <span class="flex items-center gap-1 text-xs font-mono bg-success/10 border border-success/40 text-success px-2 py-0.5 rounded">
+            <span class="material-symbols-outlined text-xs">check_circle</span> ROUTING
+          </span>
+        </div>
+        <p class="text-xs text-slate-400 flex-grow">Source-initiated WEF subscription forwards Security, Sysmon, System, and Application logs from BANK-WS01 to BANK-DC01 as the collector.</p>
+        <div class="bg-[#05070a] border border-border-default rounded p-3 overflow-x-auto">
+<pre class="text-xs font-mono text-secondary leading-relaxed"><span class="text-slate-500">&lt;!-- subscription.xml (excerpt) --&gt;</span>
+&lt;<span class="text-primary">QueryList</span>&gt;
+  &lt;<span class="text-primary">Query</span> Id=<span class="text-tertiary">"0"</span> Path=<span class="text-tertiary">"Security"</span>&gt;
+    &lt;<span class="text-primary">Select</span> Path=<span class="text-tertiary">"Security"</span>&gt;
+      *[System[EventID=4624 or
+        EventID=4625 or EventID=4740]]
+    &lt;/<span class="text-primary">Select</span>&gt;
+  &lt;/<span class="text-primary">Query</span>&gt;
+&lt;/<span class="text-primary">QueryList</span>&gt;</pre>
+        </div>
+        <div class="text-xs font-mono text-slate-500">Collector: BANK-DC01 · Forwarder: BANK-WS01</div>
+      </div>
+
+      <!-- Pillar 4: Wazuh SIEM -->
+      <div class="bg-surface-container-low border border-border-default border-t-2 border-t-success rounded-lg p-5 flex flex-col gap-3 glow-green">
+        <div class="flex items-center justify-between">
+          <h3 class="font-semibold text-on-surface">Wazuh SIEM</h3>
+          <span class="flex items-center gap-1 text-xs font-mono bg-success/10 border border-success/40 text-success px-2 py-0.5 rounded">
+            <span class="material-symbols-outlined text-xs">check_circle</span> MONITORING
+          </span>
+        </div>
+        <p class="text-xs text-slate-400 flex-grow">Wazuh 4.14 on BANK-SIEM01 ingests logs from both agents. Three custom rules detect brute force, privilege escalation, and Kerberoasting in real time.</p>
+        <div class="bg-[#05070a] border border-border-default rounded p-3 overflow-x-auto">
+<pre class="text-xs font-mono text-secondary leading-relaxed"><span class="text-slate-500"># local_rules.xml (excerpt)</span>
+&lt;<span class="text-primary">rule</span> id=<span class="text-tertiary">"100001"</span> level=<span class="text-tertiary">"12"</span>&gt;
+  &lt;<span class="text-primary">if_matched_sid</span>&gt;60122&lt;/<span class="text-primary">if_matched_sid</span>&gt;
+  &lt;<span class="text-primary">frequency</span>&gt;5&lt;/<span class="text-primary">frequency</span>&gt;
+  &lt;<span class="text-primary">timeframe</span>&gt;300&lt;/<span class="text-primary">timeframe</span>&gt;
+  &lt;<span class="text-primary">description</span>&gt;Brute Force Detected&lt;/<span class="text-primary">description</span>&gt;
+  &lt;<span class="text-primary">mitre</span>&gt;&lt;<span class="text-primary">id</span>&gt;T1110&lt;/<span class="text-primary">id</span>&gt;&lt;/<span class="text-primary">mitre</span>&gt;
+&lt;/<span class="text-primary">rule</span>&gt;</pre>
+        </div>
+        <div class="text-xs font-mono text-slate-500">Dashboard: <span class="text-primary">https://192.168.100.30</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Network Topology -->
+  <section>
+    <h2 class="text-xl font-semibold text-on-surface mb-4">Detection Topology — OakridgeBank Lab</h2>
+    <div class="bg-surface-container border border-border-default rounded-lg p-8 relative overflow-hidden">
+      <div class="absolute inset-0 cyber-grid opacity-[0.04]"></div>
+      <div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-4">
+
+        <!-- Attacker -->
+        <div class="flex flex-col items-center gap-2">
+          <div class="w-16 h-16 rounded-lg border border-error bg-surface-container-lowest flex items-center justify-center glow-red">
+            <span class="material-symbols-outlined text-error text-3xl">terminal</span>
+          </div>
+          <div class="bg-surface-variant border border-border-default px-3 py-1 rounded text-center">
+            <div class="text-xs font-mono text-error">BANK-KALI</div>
+            <div class="text-xs text-slate-400">192.168.100.40</div>
+          </div>
+        </div>
+
+        <div class="flex flex-col items-center gap-1 text-slate-600">
+          <div class="w-full h-[2px] w-16 bg-red-900/40 relative hidden md:block"><div class="absolute inset-0 flow-line"></div></div>
+          <span class="text-xs font-mono text-red-800">attack traffic</span>
+        </div>
+
+        <!-- Workstation -->
+        <div class="flex flex-col items-center gap-2">
+          <div class="w-16 h-16 rounded-lg border border-primary bg-surface-container-lowest flex items-center justify-center glow-blue">
+            <span class="material-symbols-outlined text-primary text-3xl">computer</span>
+          </div>
+          <div class="bg-surface-variant border border-border-default px-3 py-1 rounded text-center">
+            <div class="text-xs font-mono text-primary">BANK-WS01</div>
+            <div class="text-xs text-slate-400">192.168.100.20</div>
+          </div>
+          <div class="text-xs font-mono text-success/70 border border-success/30 bg-success/5 px-2 py-0.5 rounded">Sysmon + WEF agent</div>
+        </div>
+
+        <div class="flex flex-col items-center gap-1 text-slate-600">
+          <div class="w-full h-[2px] w-16 bg-blue-900/40 relative hidden md:block"><div class="absolute inset-0 flow-line"></div></div>
+          <span class="text-xs font-mono text-blue-800">WEF log forward</span>
+        </div>
+
+        <!-- DC -->
+        <div class="flex flex-col items-center gap-2">
+          <div class="w-16 h-16 rounded-lg border border-primary bg-surface-container-lowest flex items-center justify-center glow-blue">
+            <span class="material-symbols-outlined text-primary text-3xl">dns</span>
+          </div>
+          <div class="bg-surface-variant border border-border-default px-3 py-1 rounded text-center">
+            <div class="text-xs font-mono text-primary">BANK-DC01</div>
+            <div class="text-xs text-slate-400">192.168.100.10</div>
+          </div>
+          <div class="text-xs font-mono text-success/70 border border-success/30 bg-success/5 px-2 py-0.5 rounded">Audit policy + WEF collector</div>
+        </div>
+
+        <div class="flex flex-col items-center gap-1 text-slate-600">
+          <div class="w-full h-[2px] w-16 bg-green-900/40 relative hidden md:block"><div class="absolute inset-0 flow-line"></div></div>
+          <span class="text-xs font-mono text-green-800">Wazuh agent</span>
+        </div>
+
+        <!-- SIEM -->
+        <div class="flex flex-col items-center gap-2">
+          <div class="w-16 h-16 rounded-lg border border-success bg-surface-container-lowest flex items-center justify-center glow-green">
+            <span class="material-symbols-outlined text-success text-3xl">troubleshoot</span>
+          </div>
+          <div class="bg-surface-variant border border-border-default px-3 py-1 rounded text-center">
+            <div class="text-xs font-mono text-success">BANK-SIEM01</div>
+            <div class="text-xs text-slate-400">192.168.100.30</div>
+          </div>
+          <div class="text-xs font-mono text-success/70 border border-success/30 bg-success/5 px-2 py-0.5 rounded">Wazuh 4.14 · correlation engine</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Detection Rules -->
+  <section>
+    <h2 class="text-xl font-semibold text-on-surface mb-4">Custom Wazuh Detection Rules</h2>
+    <p class="text-sm text-slate-500 mb-5">All three rules were validated end-to-end — attacks executed, alerts fired, active response triggered.</p>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+      <div class="bg-surface-container-lowest border border-border-default border-l-4 border-l-error rounded-lg flex flex-col">
+        <div class="p-3 border-b border-border-default bg-surface-container-low flex justify-between items-center">
+          <span class="text-xs font-mono text-error">Rule ID: 100001</span>
+          <span class="text-xs font-mono bg-error/10 border border-error/40 text-error px-2 py-0.5 rounded">Level 12 · HIGH</span>
+        </div>
+        <div class="p-4 flex flex-col gap-2">
+          <h4 class="font-semibold text-on-surface text-sm">Brute Force Detected</h4>
+          <p class="text-xs text-slate-400">5+ failed logon events (4625) from same source within 300 seconds. Active response: firewall-drop on attacker IP for 300s.</p>
+          <div class="mt-2 bg-[#05070a] p-2 rounded border border-border-default">
+            <span class="text-xs font-mono text-secondary">if_matched_sid: 60122 · frequency: 5 · timeframe: 300</span>
+          </div>
+          <span class="text-xs font-mono text-slate-600">MITRE T1110 — Brute Force</span>
+        </div>
+      </div>
+
+      <div class="bg-surface-container-lowest border border-border-default border-l-4 border-l-error rounded-lg flex flex-col">
+        <div class="p-3 border-b border-border-default bg-surface-container-low flex justify-between items-center">
+          <span class="text-xs font-mono text-error">Rule ID: 100002</span>
+          <span class="text-xs font-mono bg-error/10 border border-error/40 text-error px-2 py-0.5 rounded">Level 14 · CRITICAL</span>
+        </div>
+        <div class="p-4 flex flex-col gap-2">
+          <h4 class="font-semibold text-on-surface text-sm">Privileged Group Change</h4>
+          <p class="text-xs text-slate-400">User added to privileged security group (Event ID 4728). Indicates privilege escalation or unauthorized admin access.</p>
+          <div class="mt-2 bg-[#05070a] p-2 rounded border border-border-default">
+            <span class="text-xs font-mono text-secondary">if_sid: 60159 · eventID: 4728</span>
+          </div>
+          <span class="text-xs font-mono text-slate-600">MITRE T1078 — Valid Accounts</span>
+        </div>
+      </div>
+
+      <div class="bg-surface-container-lowest border border-border-default border-l-4 border-l-error rounded-lg flex flex-col">
+        <div class="p-3 border-b border-border-default bg-surface-container-low flex justify-between items-center">
+          <span class="text-xs font-mono text-error">Rule ID: 100003</span>
+          <span class="text-xs font-mono bg-error/10 border border-error/40 text-error px-2 py-0.5 rounded">Level 14 · CRITICAL</span>
+        </div>
+        <div class="p-4 flex flex-col gap-2">
+          <h4 class="font-semibold text-on-surface text-sm">Kerberoasting Attempt</h4>
+          <p class="text-xs text-slate-400">Event ID 4769 with ticket encryption type 0x17 (RC4). RC4 is weak and commonly requested during Kerberoasting to enable offline cracking.</p>
+          <div class="mt-2 bg-[#05070a] p-2 rounded border border-border-default">
+            <span class="text-xs font-mono text-secondary">eventID: 4769 · ticketEncryptionType: 0x17</span>
+          </div>
+          <span class="text-xs font-mono text-slate-600">MITRE T1558.003 — Kerberoasting</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Evidence screenshots row -->
+  <section>
+    <h2 class="text-xl font-semibold text-on-surface mb-4">Lab Configuration Evidence</h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div class="bg-surface-container border border-border-default rounded-lg overflow-hidden">
+        <img src="../Screenshots/screenshot_06_auditpol.png" alt="Audit Policy Output" class="w-full object-cover screenshot-frame" onclick="openLightbox(this.src)" style="max-height:180px;object-fit:cover;object-position:top"/>
+        <div class="p-3 border-t border-border-default">
+          <div class="text-xs font-mono text-success">screenshot_06</div>
+          <div class="text-xs text-slate-400">auditpol /get /category:* — all policies enabled</div>
+        </div>
+      </div>
+      <div class="bg-surface-container border border-border-default rounded-lg overflow-hidden">
+        <img src="../Screenshots/screenshot_03_4625_detail.png" alt="Get-ADDefaultDomainPasswordPolicy — LockoutThreshold: 5" class="w-full object-cover screenshot-frame" onclick="openLightbox(this.src)" style="max-height:180px;object-fit:cover;object-position:top"/>
+        <div class="p-3 border-t border-border-default">
+          <div class="text-xs font-mono text-success">screenshot_03</div>
+          <div class="text-xs text-slate-400">Get-ADDefaultDomainPasswordPolicy — LockoutThreshold: 5, LockoutDuration: 00:30:00</div>
+        </div>
+      </div>
+      <div class="bg-surface-container border border-border-default rounded-lg overflow-hidden">
+        <img src="../Screenshots/screenshot_08_aduc.png" alt="AD Users & Computers" class="w-full object-cover screenshot-frame" onclick="openLightbox(this.src)" style="max-height:180px;object-fit:cover;object-position:top"/>
+        <div class="p-3 border-t border-border-default">
+          <div class="text-xs font-mono text-success">screenshot_08</div>
+          <div class="text-xs text-slate-400">Active Directory Users &amp; Computers — oakridgebank.local</div>
+        </div>
+      </div>
+    </div>
+    <p class="text-xs text-slate-500 mt-2">Click any screenshot to expand. All evidence from BANK-DC01.</p>
+  </section>
+
+  <!-- Nav -->
+  <div class="flex justify-between">
+    <a href="attacking.html" class="flex items-center gap-2 border border-slate-700 hover:border-blue-500 text-slate-300 hover:text-white font-semibold px-5 py-3 rounded transition-all">
+      <span class="material-symbols-outlined">arrow_back</span> Attacking AD
+    </a>
+    <a href="timeline.html" class="flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white font-semibold px-5 py-3 rounded transition-colors glow-blue">
+      Next: Live Attack Timeline <span class="material-symbols-outlined">arrow_forward</span>
+    </a>
+  </div>
+
+</main>
+
+<!-- Lightbox -->
+<div id="lightbox" onclick="closeLightbox()">
+  <span id="lightbox-close" onclick="closeLightbox()">&#x2715;</span>
+  <img id="lightbox-img" src="" alt=""/>
+</div>
+
+<footer class="w-full py-6 border-t border-slate-800 bg-slate-950">
+  <div class="flex flex-col md:flex-row justify-between items-center px-8 gap-3 max-w-7xl mx-auto">
+    <div class="text-sm text-slate-400">Liam Jones · University of Arkansas · Cyber Crime &amp; Data Privacy Law — Prof. Reavis</div>
+    <div class="text-xs text-slate-600 font-mono">oakridgebank.local · Isolated Lab · Educational Use Only</div>
+  </div>
+</footer>
+
+<script>
+function openLightbox(src) {
+  document.getElementById('lightbox-img').src = src;
+  document.getElementById('lightbox').classList.add('open');
+}
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('open');
+}
+document.addEventListener('keydown', e => { if(e.key==='Escape') closeLightbox(); });
+</script>
+</body>
+</html>
