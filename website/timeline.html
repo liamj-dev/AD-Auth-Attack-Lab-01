@@ -157,10 +157,10 @@ tailwind.config={darkMode:"class",theme:{extend:{
               <span class="text-xs font-mono text-slate-400">Network scan — identify the Domain Controller</span>
             </div>
             <div class="rounded-lg overflow-hidden border-0 bg-surface-container-lowest">
-              <img src="../Screenshots/screenshot_20_kali_nmap_scan.png" alt="nmap scan from BANK-KALI" class="w-full screenshot-frame" onclick="openLightbox(this.src)" style="max-height:200px;object-fit:cover;object-position:top"/>
+              <img src="Screenshots/screenshot_20_kali_nmap_scan.png" alt="nmap scan from BANK-KALI" class="w-full screenshot-frame" onclick="openLightbox(this.src)" style="max-height:200px;object-fit:cover;object-position:top"/>
               <div class="p-2 border-t border-border-default flex items-center justify-between">
                 <span class="text-xs font-mono text-slate-500">screenshot_20 — nmap: ports 88/389/445 open on 192.168.100.10 → Domain Controller identified</span>
-                <span class="text-xs font-mono text-primary cursor-pointer" onclick="openLightbox('../Screenshots/screenshot_20_kali_nmap_scan.png')">expand ↗</span>
+                <span class="text-xs font-mono text-primary cursor-pointer" onclick="openLightbox('Screenshots/screenshot_20_kali_nmap_scan.png')">expand ↗</span>
               </div>
             </div>
             <div class="bg-[#05070a] border-t border-border-default">
@@ -207,10 +207,10 @@ kerbrute userenum -d oakridgebank.local --dc 192.168.100.10 ~/usernames.txt
               <span class="text-xs font-mono text-slate-400">Password spray — one password, all valid usernames</span>
             </div>
             <div class="rounded-lg overflow-hidden border-0 bg-surface-container-lowest">
-              <img src="../Screenshots/screenshot_24_nxc_password_spray.png" alt="NetExec password spray — jsmith Pwn3d!" class="w-full screenshot-frame" onclick="openLightbox(this.src)" style="max-height:220px;object-fit:cover;object-position:top"/>
+              <img src="Screenshots/screenshot_24_nxc_password_spray.png" alt="NetExec password spray — jsmith Pwn3d!" class="w-full screenshot-frame" onclick="openLightbox(this.src)" style="max-height:220px;object-fit:cover;object-position:top"/>
               <div class="p-2 border-t border-border-default flex items-center justify-between">
                 <span class="text-xs font-mono text-slate-500">screenshot_24 — NetExec spray: administrator fails, jsmith <span class="text-green-400">Pwn3d!</span></span>
-                <span class="text-xs font-mono text-primary cursor-pointer" onclick="openLightbox('../Screenshots/screenshot_24_nxc_password_spray.png')">expand ↗</span>
+                <span class="text-xs font-mono text-primary cursor-pointer" onclick="openLightbox('Screenshots/screenshot_24_nxc_password_spray.png')">expand ↗</span>
               </div>
             </div>
             <div class="bg-[#05070a] border-t border-border-default">
@@ -230,10 +230,10 @@ SMB  192.168.100.10  445  BANK-DC01  [*] Windows Server 2022 Build 20348 x64 (na
               <span class="text-xs font-mono text-slate-400">Authenticated enumeration — dump all domain users, find Kerberoasting target</span>
             </div>
             <div class="rounded-lg overflow-hidden border-0 bg-surface-container-lowest">
-              <img src="../Screenshots/screenshot_21_kali_recon_results.png" alt="NetExec SMB user enumeration" class="w-full screenshot-frame" onclick="openLightbox(this.src)" style="max-height:200px;object-fit:cover;object-position:top"/>
+              <img src="Screenshots/screenshot_21_kali_recon_results.png" alt="NetExec SMB user enumeration" class="w-full screenshot-frame" onclick="openLightbox(this.src)" style="max-height:200px;object-fit:cover;object-position:top"/>
               <div class="p-2 border-t border-border-default flex items-center justify-between">
                 <span class="text-xs font-mono text-slate-500">screenshot_21 — NetExec: full domain user dump as jsmith — svc_backup identified</span>
-                <span class="text-xs font-mono text-primary cursor-pointer" onclick="openLightbox('../Screenshots/screenshot_21_kali_recon_results.png')">expand ↗</span>
+                <span class="text-xs font-mono text-primary cursor-pointer" onclick="openLightbox('Screenshots/screenshot_21_kali_recon_results.png')">expand ↗</span>
               </div>
             </div>
             <div class="bg-[#05070a] border-t border-border-default">
@@ -295,25 +295,25 @@ SMB  192.168.100.10  445  BANK-DC01  svc_backup       2026-04-15 23:37:13  &lt;-
           <!-- Screenshots -->
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div class="rounded-lg overflow-hidden border border-error/20 bg-surface-container-lowest">
-              <img src="../Screenshots/screenshot_02_4625_flood_list.png" alt="4625 flood list" class="w-full screenshot-frame" onclick="openLightbox(this.src)" style="max-height:200px;object-fit:cover;object-position:top"/>
+              <img src="Screenshots/screenshot_02_4625_flood_list.png" alt="4625 flood list" class="w-full screenshot-frame" onclick="openLightbox(this.src)" style="max-height:200px;object-fit:cover;object-position:top"/>
               <div class="p-2 border-t border-border-default flex items-center justify-between">
                 <span class="text-xs font-mono text-slate-500">screenshot_02 — 4625 flood (Event Viewer)</span>
-                <span class="text-xs font-mono text-primary cursor-pointer" onclick="openLightbox('../Screenshots/screenshot_02_4625_flood_list.png')">expand ↗</span>
+                <span class="text-xs font-mono text-primary cursor-pointer" onclick="openLightbox('Screenshots/screenshot_02_4625_flood_list.png')">expand ↗</span>
               </div>
             </div>
             <div class="rounded-lg overflow-hidden border border-error/20 bg-surface-container-lowest">
-              <img src="../Screenshots/screenshot_16_wazuh_100001_rule_hits.png" alt="4625 flood detail — source 192.168.100.40, NTLM" class="w-full screenshot-frame" onclick="openLightbox(this.src)" style="max-height:200px;object-fit:cover;object-position:top"/>
+              <img src="Screenshots/screenshot_16_wazuh_100001_rule_hits.png" alt="4625 flood detail — source 192.168.100.40, NTLM" class="w-full screenshot-frame" onclick="openLightbox(this.src)" style="max-height:200px;object-fit:cover;object-position:top"/>
               <div class="p-2 border-t border-border-default flex items-center justify-between">
                 <span class="text-xs font-mono text-slate-500">screenshot_16 — 4625 flood detail: source 192.168.100.40, NTLM auth</span>
-                <span class="text-xs font-mono text-primary cursor-pointer" onclick="openLightbox('../Screenshots/screenshot_16_wazuh_100001_rule_hits.png')">expand ↗</span>
+                <span class="text-xs font-mono text-primary cursor-pointer" onclick="openLightbox('Screenshots/screenshot_16_wazuh_100001_rule_hits.png')">expand ↗</span>
               </div>
             </div>
           </div>
           <div class="rounded-lg overflow-hidden border border-error/20 bg-surface-container-lowest">
-            <img src="../Screenshots/screenshot_05_4740_lockout.png" alt="4740 account lockout" class="w-full screenshot-frame" onclick="openLightbox(this.src)" style="max-height:200px;object-fit:cover;object-position:top"/>
+            <img src="Screenshots/screenshot_05_4740_lockout.png" alt="4740 account lockout" class="w-full screenshot-frame" onclick="openLightbox(this.src)" style="max-height:200px;object-fit:cover;object-position:top"/>
             <div class="p-2 border-t border-border-default flex items-center justify-between">
               <span class="text-xs font-mono text-slate-500">screenshot_05 — Event ID 4740 (account locked out)</span>
-              <span class="text-xs font-mono text-primary cursor-pointer" onclick="openLightbox('../Screenshots/screenshot_05_4740_lockout.png')">expand ↗</span>
+              <span class="text-xs font-mono text-primary cursor-pointer" onclick="openLightbox('Screenshots/screenshot_05_4740_lockout.png')">expand ↗</span>
             </div>
           </div>
 
@@ -397,7 +397,7 @@ SMB  192.168.100.10  445  BANK-DC01  svc_backup       2026-04-15 23:37:13  &lt;-
                       <span class="text-slate-600">MITRE: T1110</span>
                       <span class="text-slate-600">Active Response: firewall-drop 192.168.100.40 (300s)</span>
                     </div>
-                    <div class="mt-2 text-xs text-slate-500">Screenshot: <a href="../Screenshots/screenshot_18_wazuh_dashboard_early.png" class="text-primary underline cursor-pointer" onclick="openLightbox('../Screenshots/screenshot_18_wazuh_dashboard_early.png')">screenshot_18 — Wazuh Custom 1q: 10 failed logons, 1 brute force alert</a></div>
+                    <div class="mt-2 text-xs text-slate-500">Screenshot: <a href="Screenshots/screenshot_18_wazuh_dashboard_early.png" class="text-primary underline cursor-pointer" onclick="openLightbox('Screenshots/screenshot_18_wazuh_dashboard_early.png')">screenshot_18 — Wazuh Custom 1q: 10 failed logons, 1 brute force alert</a></div>
                   </div>
                 </div>
               </div>
@@ -406,7 +406,7 @@ SMB  192.168.100.10  445  BANK-DC01  svc_backup       2026-04-15 23:37:13  &lt;-
 
           <!-- Additional SIEM screenshot -->
           <div class="rounded-lg overflow-hidden border border-success/20 bg-surface-container-lowest">
-            <img src="../Screenshots/screenshot_18_wazuh_dashboard_early.png" alt="Wazuh Custom 1q — brute force detection" class="w-full screenshot-frame" onclick="openLightbox(this.src)" style="max-height:200px;object-fit:cover;object-position:top"/>
+            <img src="Screenshots/screenshot_18_wazuh_dashboard_early.png" alt="Wazuh Custom 1q — brute force detection" class="w-full screenshot-frame" onclick="openLightbox(this.src)" style="max-height:200px;object-fit:cover;object-position:top"/>
             <div class="p-2 border-t border-border-default">
               <span class="text-xs font-mono text-slate-500">screenshot_18 — Wazuh Custom 1q: 10 failed logons, 1 brute force alert detected</span>
             </div>
@@ -430,10 +430,10 @@ SMB  192.168.100.10  445  BANK-DC01  svc_backup       2026-04-15 23:37:13  &lt;-
 
           <!-- Screenshot -->
           <div class="rounded-lg overflow-hidden border border-error/20 bg-surface-container-lowest">
-            <img src="../Screenshots/screenshot_04_4769_kerberoasting.png" alt="4769 Kerberoasting event" class="w-full screenshot-frame" onclick="openLightbox(this.src)" style="max-height:240px;object-fit:cover;object-position:top"/>
+            <img src="Screenshots/screenshot_04_4769_kerberoasting.png" alt="4769 Kerberoasting event" class="w-full screenshot-frame" onclick="openLightbox(this.src)" style="max-height:240px;object-fit:cover;object-position:top"/>
             <div class="p-2 border-t border-border-default flex items-center justify-between">
               <span class="text-xs font-mono text-slate-500">screenshot_04 — Event ID 4769 (Kerberos service ticket request)</span>
-              <span class="text-xs font-mono text-primary cursor-pointer" onclick="openLightbox('../Screenshots/screenshot_04_4769_kerberoasting.png')">expand ↗</span>
+              <span class="text-xs font-mono text-primary cursor-pointer" onclick="openLightbox('Screenshots/screenshot_04_4769_kerberoasting.png')">expand ↗</span>
             </div>
           </div>
 
@@ -455,10 +455,10 @@ $krb5tgs$23$*svc_backup$OAKRIDGEBANK.LOCAL$oakridgebank.local/svc_backup*$e4b032
 
           <!-- Hash staging screenshot -->
           <div class="rounded-lg overflow-hidden border border-error/20 bg-surface-container-lowest">
-            <img src="../Screenshots/screenshot_23_kali_output.png" alt="Kerberoasting hash staged for offline cracking" class="w-full screenshot-frame" onclick="openLightbox(this.src)" style="max-height:220px;object-fit:cover;object-position:top"/>
+            <img src="Screenshots/screenshot_23_kali_output.png" alt="Kerberoasting hash staged for offline cracking" class="w-full screenshot-frame" onclick="openLightbox(this.src)" style="max-height:220px;object-fit:cover;object-position:top"/>
             <div class="p-2 border-t border-border-default flex items-center justify-between">
               <span class="text-xs font-mono text-slate-500">screenshot_23 — $krb5tgs$ hash captured, piped to ~/svc_backup.hash for offline cracking</span>
-              <span class="text-xs font-mono text-primary cursor-pointer" onclick="openLightbox('../Screenshots/screenshot_23_kali_output.png')">expand ↗</span>
+              <span class="text-xs font-mono text-primary cursor-pointer" onclick="openLightbox('Screenshots/screenshot_23_kali_output.png')">expand ↗</span>
             </div>
           </div>
 
@@ -515,7 +515,7 @@ hashcat -m 13100 ~/svc_backup.hash /usr/share/wordlists/rockyou.txt
 
           <!-- Wazuh dashboard screenshot -->
           <div class="rounded-lg overflow-hidden border border-success/20 bg-surface-container-lowest">
-            <img src="../Screenshots/screenshot_09_wazuh_dashboard_mitre.png" alt="Wazuh MITRE ATT&CK dashboard" class="w-full screenshot-frame" onclick="openLightbox(this.src)" style="max-height:200px;object-fit:cover;object-position:top"/>
+            <img src="Screenshots/screenshot_09_wazuh_dashboard_mitre.png" alt="Wazuh MITRE ATT&CK dashboard" class="w-full screenshot-frame" onclick="openLightbox(this.src)" style="max-height:200px;object-fit:cover;object-position:top"/>
             <div class="p-2 border-t border-border-default">
               <span class="text-xs font-mono text-slate-500">screenshot_09 — Wazuh dashboard MITRE ATT&amp;CK breakdown showing T1558.003</span>
             </div>
@@ -540,17 +540,17 @@ hashcat -m 13100 ~/svc_backup.hash /usr/share/wordlists/rockyou.txt
           <!-- Screenshots -->
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div class="rounded-lg overflow-hidden border border-error/20 bg-surface-container-lowest">
-              <img src="../Screenshots/screenshot_15_wazuh_100001_alerts.png" alt="Kali terminal — net rpc group addmem Domain Admins jsmith" class="w-full screenshot-frame" onclick="openLightbox(this.src)" style="max-height:200px;object-fit:cover;object-position:top"/>
+              <img src="Screenshots/screenshot_15_wazuh_100001_alerts.png" alt="Kali terminal — net rpc group addmem Domain Admins jsmith" class="w-full screenshot-frame" onclick="openLightbox(this.src)" style="max-height:200px;object-fit:cover;object-position:top"/>
               <div class="p-2 border-t border-border-default flex items-center justify-between">
                 <span class="text-xs font-mono text-slate-500">screenshot_15 — Kali: net rpc group addmem "Domain Admins" jsmith as svc_backup</span>
-                <span class="text-xs font-mono text-primary cursor-pointer" onclick="openLightbox('../Screenshots/screenshot_15_wazuh_100001_alerts.png')">expand ↗</span>
+                <span class="text-xs font-mono text-primary cursor-pointer" onclick="openLightbox('Screenshots/screenshot_15_wazuh_100001_alerts.png')">expand ↗</span>
               </div>
             </div>
             <div class="rounded-lg overflow-hidden border border-error/20 bg-surface-container-lowest">
-              <img src="../Screenshots/screenshot_14_kali_privilege_escalation.png" alt="Event ID 4728 — jsmith added to Domain Admins by svc_backup" class="w-full screenshot-frame" onclick="openLightbox(this.src)" style="max-height:200px;object-fit:cover;object-position:top"/>
+              <img src="Screenshots/screenshot_14_kali_privilege_escalation.png" alt="Event ID 4728 — jsmith added to Domain Admins by svc_backup" class="w-full screenshot-frame" onclick="openLightbox(this.src)" style="max-height:200px;object-fit:cover;object-position:top"/>
               <div class="p-2 border-t border-border-default flex items-center justify-between">
                 <span class="text-xs font-mono text-slate-500">screenshot_14 — Event ID 4728: svc_backup added jsmith to Domain Admins</span>
-                <span class="text-xs font-mono text-primary cursor-pointer" onclick="openLightbox('../Screenshots/screenshot_14_kali_privilege_escalation.png')">expand ↗</span>
+                <span class="text-xs font-mono text-primary cursor-pointer" onclick="openLightbox('Screenshots/screenshot_14_kali_privilege_escalation.png')">expand ↗</span>
               </div>
             </div>
           </div>
@@ -619,13 +619,13 @@ OAKRIDGEBANK\jsmith</span></pre>
           <!-- Wazuh dashboard screenshots -->
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div class="rounded-lg overflow-hidden border border-success/20 bg-surface-container-lowest">
-              <img src="../Screenshots/screenshot_11_wazuh_dashboard_summary.png" alt="Wazuh summary dashboard" class="w-full screenshot-frame" onclick="openLightbox(this.src)" style="max-height:180px;object-fit:cover;object-position:top"/>
+              <img src="Screenshots/screenshot_11_wazuh_dashboard_summary.png" alt="Wazuh summary dashboard" class="w-full screenshot-frame" onclick="openLightbox(this.src)" style="max-height:180px;object-fit:cover;object-position:top"/>
               <div class="p-2 border-t border-border-default">
                 <span class="text-xs font-mono text-slate-500">screenshot_11 — Wazuh OakridgeBank Security Overview dashboard</span>
               </div>
             </div>
             <div class="rounded-lg overflow-hidden border border-success/20 bg-surface-container-lowest">
-              <img src="../Screenshots/screenshot_10_wazuh_threat_hunting.png" alt="Wazuh threat hunting" class="w-full screenshot-frame" onclick="openLightbox(this.src)" style="max-height:180px;object-fit:cover;object-position:top"/>
+              <img src="Screenshots/screenshot_10_wazuh_threat_hunting.png" alt="Wazuh threat hunting" class="w-full screenshot-frame" onclick="openLightbox(this.src)" style="max-height:180px;object-fit:cover;object-position:top"/>
               <div class="p-2 border-t border-border-default">
                 <span class="text-xs font-mono text-slate-500">screenshot_10 — Wazuh threat hunting view</span>
               </div>

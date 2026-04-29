@@ -73,7 +73,7 @@ auditpol /set /subcategory:<span class="text-primary">"Kerberos Authentication S
 auditpol /set /subcategory:<span class="text-primary">"Credential Validation"</span> \
   /success:enable /failure:enable</pre>
         </div>
-        <div class="text-xs font-mono text-slate-500">Screenshot: <a href="../Screenshots/screenshot_06_auditpol.png" target="_blank" class="text-primary underline">auditpol output</a></div>
+        <div class="text-xs font-mono text-slate-500">Screenshot: <a href="Screenshots/screenshot_06_auditpol.png" target="_blank" class="text-primary underline">auditpol output</a></div>
       </div>
 
       <!-- Pillar 2: Account Lockout -->
@@ -94,7 +94,7 @@ auditpol /set /subcategory:<span class="text-primary">"Credential Validation"</s
   -MinPasswordLength <span class="text-tertiary">12</span> `
   -ComplexityEnabled <span class="text-green-400">$true</span></pre>
         </div>
-        <div class="text-xs font-mono text-slate-500">Screenshot: <a href="../Screenshots/screenshot_03_4625_detail.png" target="_blank" class="text-primary underline">lockout policy — threshold=5</a></div>
+        <div class="text-xs font-mono text-slate-500">Screenshot: <a href="Screenshots/screenshot_03_4625_detail.png" target="_blank" class="text-primary underline">lockout policy — threshold=5</a></div>
       </div>
 
       <!-- Pillar 3: WEF -->
@@ -274,21 +274,21 @@ auditpol /set /subcategory:<span class="text-primary">"Credential Validation"</s
     <h2 class="text-xl font-semibold text-on-surface mb-4">Lab Configuration Evidence</h2>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
       <div class="bg-surface-container border border-border-default rounded-lg overflow-hidden">
-        <img src="../Screenshots/screenshot_06_auditpol.png" alt="Audit Policy Output" class="w-full object-cover screenshot-frame" onclick="openLightbox(this.src)" style="max-height:180px;object-fit:cover;object-position:top"/>
+        <img src="Screenshots/screenshot_06_auditpol.png" alt="Audit Policy Output" class="w-full object-cover screenshot-frame" onclick="openLightbox(this.src)" style="max-height:180px;object-fit:cover;object-position:top"/>
         <div class="p-3 border-t border-border-default">
           <div class="text-xs font-mono text-success">screenshot_06</div>
           <div class="text-xs text-slate-400">auditpol /get /category:* — all policies enabled</div>
         </div>
       </div>
       <div class="bg-surface-container border border-border-default rounded-lg overflow-hidden">
-        <img src="../Screenshots/screenshot_03_4625_detail.png" alt="Get-ADDefaultDomainPasswordPolicy — LockoutThreshold: 5" class="w-full object-cover screenshot-frame" onclick="openLightbox(this.src)" style="max-height:180px;object-fit:cover;object-position:top"/>
+        <img src="Screenshots/screenshot_03_4625_detail.png" alt="Get-ADDefaultDomainPasswordPolicy — LockoutThreshold: 5" class="w-full object-cover screenshot-frame" onclick="openLightbox(this.src)" style="max-height:180px;object-fit:cover;object-position:top"/>
         <div class="p-3 border-t border-border-default">
           <div class="text-xs font-mono text-success">screenshot_03</div>
           <div class="text-xs text-slate-400">Get-ADDefaultDomainPasswordPolicy — LockoutThreshold: 5, LockoutDuration: 00:30:00</div>
         </div>
       </div>
       <div class="bg-surface-container border border-border-default rounded-lg overflow-hidden">
-        <img src="../Screenshots/screenshot_08_aduc.png" alt="AD Users & Computers" class="w-full object-cover screenshot-frame" onclick="openLightbox(this.src)" style="max-height:180px;object-fit:cover;object-position:top"/>
+        <img src="Screenshots/screenshot_08_aduc.png" alt="AD Users & Computers" class="w-full object-cover screenshot-frame" onclick="openLightbox(this.src)" style="max-height:180px;object-fit:cover;object-position:top"/>
         <div class="p-3 border-t border-border-default">
           <div class="text-xs font-mono text-success">screenshot_08</div>
           <div class="text-xs text-slate-400">Active Directory Users &amp; Computers — oakridgebank.local</div>
