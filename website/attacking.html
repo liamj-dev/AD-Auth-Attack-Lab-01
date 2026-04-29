@@ -45,7 +45,7 @@ tailwind.config={darkMode:"class",theme:{extend:{
     <div class="text-xs font-mono text-red-400 tracking-widest uppercase mb-2">Module 02</div>
     <h1 class="text-4xl font-extrabold tracking-tighter text-on-background mb-3">How Attackers Exploit Authentication</h1>
     <p class="text-slate-400 max-w-3xl text-base">
-      Active Directory is the central nervous system of most enterprise environments. Its authentication mechanisms — specifically Kerberos and NTLM — contain design-level weaknesses that adversaries have refined into reliable, repeatable attack techniques.
+      Kerberos and NTLM contain design-level weaknesses that adversaries have turned into reliable, repeatable attack techniques against AD environments.
     </p>
   </header>
 
@@ -64,7 +64,7 @@ tailwind.config={darkMode:"class",theme:{extend:{
           <span class="text-xs font-mono px-2 py-1 rounded border border-error/50 bg-error/10 text-error">T1110</span>
         </div>
         <p class="text-sm text-slate-400 flex-grow">
-          Attackers attempt many password guesses — either against one account (brute force) or one password against many accounts (spraying). Spraying avoids lockouts by staying below the threshold per account, making it ideal for targeting AD at scale.
+          Brute force targets one account with many passwords; spraying tries one password across many accounts to stay under lockout thresholds.
         </p>
         <div class="text-xs font-mono text-slate-500 bg-surface-container-low p-3 rounded border border-border-default">
           <span class="text-error">Event IDs to watch:</span> 4625 (failed logon) · 4740 (account lockout) · 4771 (Kerberos pre-auth failure)
@@ -82,7 +82,7 @@ tailwind.config={darkMode:"class",theme:{extend:{
           <span class="text-xs font-mono px-2 py-1 rounded border border-error/50 bg-error/10 text-error">T1558.003</span>
         </div>
         <p class="text-sm text-slate-400 flex-grow">
-          Any domain user can request a service ticket (TGS) for any account with a Service Principal Name (SPN). The ticket is encrypted with the service account's password hash. Attackers export it and crack it offline — no noise on the network.
+          Any domain user can request a TGS for any SPN-registered account. The ticket is encrypted with the service account's hash — exportable and crackable offline with no network noise.
         </p>
         <div class="text-xs font-mono text-slate-500 bg-surface-container-low p-3 rounded border border-border-default">
           <span class="text-error">Event IDs to watch:</span> 4769 (Kerberos service ticket request with RC4 encryption type 0x17)
@@ -100,7 +100,7 @@ tailwind.config={darkMode:"class",theme:{extend:{
           <span class="text-xs font-mono px-2 py-1 rounded border border-error/50 bg-error/10 text-error">T1550.002</span>
         </div>
         <p class="text-sm text-slate-400 flex-grow">
-          NTLM uses a password hash — not the plaintext — for authentication. Attackers dump hashes from memory on a compromised host (e.g., via Mimikatz) and use them directly to authenticate to other systems, enabling lateral movement without cracking anything.
+          NTLM authenticates with a hash, not plaintext. Attackers dump hashes from memory (e.g., Mimikatz) and use them directly to move laterally — no cracking needed.
         </p>
         <div class="text-xs font-mono text-slate-500 bg-surface-container-low p-3 rounded border border-border-default">
           <span class="text-error">Event IDs to watch:</span> 4624 Logon Type 9 (NewCredentials) — explicit credential use over NTLM
@@ -118,7 +118,7 @@ tailwind.config={darkMode:"class",theme:{extend:{
           <span class="text-xs font-mono px-2 py-1 rounded border border-error/50 bg-error/10 text-error">T1558.004</span>
         </div>
         <p class="text-sm text-slate-400 flex-grow">
-          Accounts configured with "Do not require Kerberos preauthentication" will respond to authentication requests without verifying identity first. Attackers can request an AS-REP response for these accounts and crack the encrypted portion offline.
+          Accounts with preauthentication disabled respond to AS-REQ without verifying identity. Attackers request the AS-REP and crack the encrypted blob offline.
         </p>
         <div class="text-xs font-mono text-slate-500 bg-surface-container-low p-3 rounded border border-border-default">
           <span class="text-error">Event IDs to watch:</span> 4768 with preauth type 0 — AS-REQ without preauthentication
