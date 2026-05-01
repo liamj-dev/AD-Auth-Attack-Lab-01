@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Authentication Under Attack – Research Paper</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="_shared.css"/>
+<script id="tailwind-config">
+tailwind.config={darkMode:"class",theme:{extend:{
+  colors:{"background":"#10131a","surface":"#10131a","surface-container":"#1d2027","surface-container-low":"#191b23","surface-container-high":"#272a31","surface-container-lowest":"#0b0e15","surface-variant":"#32353c","on-background":"#e1e2ec","on-surface":"#e1e2ec","on-surface-variant":"#c2c6d6","primary":"#adc6ff","on-primary":"#002e6a","primary-container":"#4d8eff","on-primary-container":"#00285d","secondary":"#b9c8de","secondary-container":"#39485a","tertiary":"#ffb786","error":"#ffb4ab","error-container":"#93000a","success":"#10b981","outline":"#8c909f","outline-variant":"#424754","border-default":"#1e2a3a"},
+  fontFamily:{"mono-code":["JetBrains Mono"],"mono-label":["JetBrains Mono"]},
+  fontSize:{"h1":["24px",{lineHeight:"32px",letterSpacing:"-0.02em",fontWeight:"600"}],"h2":["20px",{lineHeight:"28px",letterSpacing:"-0.01em",fontWeight:"600"}],"body-md":["14px",{lineHeight:"20px"}],"body-sm":["12px",{lineHeight:"16px"}],"mono-code":["13px",{lineHeight:"20px"}],"mono-label":["11px",{lineHeight:"14px",letterSpacing:"0.05em",fontWeight:"500"}]},
+  spacing:{"stack-sm":"8px","stack-md":"16px","stack-lg":"32px","gutter":"16px","margin-page":"24px","card-padding":"16px"}
+}}}
+</script>
+</head>
+<body class="bg-background text-on-background antialiased min-h-screen flex flex-col font-sans">
+
+<!-- NAV -->
+<nav class="fixed top-0 w-full z-50 bg-slate-950/90 backdrop-blur-md border-b border-slate-800">
+  <div class="flex justify-between items-center px-6 py-3 max-w-7xl mx-auto">
+    <a href="index.html" class="flex items-center gap-2 text-base font-bold tracking-tighter text-slate-50 uppercase">
+      <span class="material-symbols-outlined text-blue-500" style="font-variation-settings:'FILL' 1;">shield_lock</span>
+      Authentication Under Attack
+    </a>
+    <div class="hidden md:flex items-center gap-1 text-sm font-medium">
+      <a href="index.html"          class="text-slate-400 hover:text-slate-100 px-3 py-2 rounded transition-colors">Overview</a>
+      <a href="authentication.html" class="text-slate-400 hover:text-slate-100 px-3 py-2 rounded transition-colors">Authentication</a>
+      <a href="attacking.html"      class="text-slate-400 hover:text-slate-100 px-3 py-2 rounded transition-colors">Attacking AD</a>
+      <a href="defending.html"      class="text-slate-400 hover:text-slate-100 px-3 py-2 rounded transition-colors">Defending AD</a>
+      <a href="timeline.html"       class="text-slate-400 hover:text-slate-100 px-3 py-2 rounded transition-colors">Attack Timeline</a>
+      <a href="resources.html"      class="text-slate-400 hover:text-slate-100 px-3 py-2 rounded transition-colors">Resources</a>
+      <a href="report.html"         class="text-blue-400 border-b border-blue-400 px-3 py-2">Report</a>
+    </div>
+    <a href="Exploring Active Directory Authentication Attacks.pdf" target="_blank" class="hidden md:inline-flex items-center gap-1 bg-blue-600 hover:bg-blue-500 text-white text-sm font-semibold px-4 py-2 rounded transition-colors glow-blue">
+      <span class="material-symbols-outlined text-base">download</span> Download PDF
+    </a>
+  </div>
+</nav>
+
+<main class="flex-grow pt-24 pb-16 px-4 max-w-4xl mx-auto w-full">
+
+  <!-- Download card -->
+  <div class="flex flex-col items-center justify-center py-20 text-center space-y-6">
+    <span class="material-symbols-outlined text-blue-400 text-6xl" style="font-variation-settings:'FILL' 1;">picture_as_pdf</span>
+    <div class="space-y-2">
+      <div class="text-xs font-mono text-blue-400 tracking-widest uppercase">Research Paper · Spring 2026</div>
+      <h1 class="text-4xl font-extrabold tracking-tighter text-on-background">Exploring Active Directory<br class="hidden sm:block"/> Authentication Attacks</h1>
+      <p class="text-slate-400 text-base">Liam Jones &nbsp;·&nbsp; University of Arkansas &nbsp;·&nbsp; Cyber Crime &amp; Data Privacy Law — Prof. Reavis</p>
+    </div>
+    <a href="Exploring Active Directory Authentication Attacks.pdf" target="_blank"
+       class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white text-base font-semibold px-8 py-3 rounded-lg transition-colors glow-blue">
+      <span class="material-symbols-outlined">download</span>
+      Download Full PDF
+    </a>
+  </div>
+
+</main>
+
+<footer class="w-full py-6 border-t border-slate-800 bg-slate-950">
+  <div class="flex flex-col md:flex-row justify-between items-center px-8 gap-3 max-w-7xl mx-auto">
+    <div class="text-sm text-slate-400">Liam Jones · University of Arkansas · Cyber Crime &amp; Data Privacy Law — Prof. Reavis</div>
+    <div class="text-xs text-slate-600 font-mono">oakridgebank.local · Isolated Lab · Educational Use Only</div>
+  </div>
+</footer>
+
+</body>
+</html>
