@@ -1,0 +1,27 @@
+# Vercel
+.vercel
+
+# Claude Code local config
+.claude/
+
+# Large lab artifacts — never commit
+ISOs/
+VMs/
+*.iso
+*.vmdk
+*.vmx
+*.vmsd
+*.vmxf
+*.nvram
+*.vmem
+*.vmss
+*.lck/
+
+# Local notes / scratch
+OPENCLAUDEHERE.txt
+Notes/
+
+# OS / editor cruft
+Thumbs.db
+.DS_Store
+*.swp
